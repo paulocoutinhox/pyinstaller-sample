@@ -1,0 +1,71 @@
+name: Windows
+
+on: [push]
+
+jobs:
+  build:
+    name: ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {
+              name: "Windows Latest MSVC",
+              os: windows-latest,
+              target: "windows",
+            }
+        python-version: [3.9]
+        python-architecture: ["x86", "x64"]
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.python-architecture }}
+
+      - name: Upgrade PIP
+        run: python -m pip install --upgrade pip setuptools wheel
+
+      - name: Display Python version
+        run: python --version
+
+      - name: Display PIP version
+        run: pip --version
+
+      - name: Install python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build
+        run: pyinstaller "My App.spec"
+
+      - name: Pack
+        run: python -m zipfile -c ${{ matrix.config.target }}-${{ matrix.python-architecture }}.zip dist/
+
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: artifact-${{ matrix.config.target }}-${{ matrix.python-architecture }}.zip
+          path: ${{ matrix.config.target }}-${{ matrix.python-architecture }}.zip
+
+      - name: Get release
+        id: get_release
+        uses: bruceadams/get-release@v1.2.2
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Release
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: ${{ matrix.config.target }}-${{ matrix.python-architecture }}.zip
+          asset_name: ${{ matrix.config.target }}-${{ matrix.python-architecture }}.zip
+          asset_content_type: application/zip
