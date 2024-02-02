@@ -46,12 +46,13 @@ jobs:
       - name: Build
         run: pyinstaller "My App.spec"
 
-      - name: "Import certificate"
-        uses: devbotsxyz/import-signing-certificate@main
+      - name: Install application certificate
+        uses: apple-actions/import-codesign-certs@v2
         with:
-          certificate-data: ${{ secrets.MACOS_CERTIFICATE }}
-          certificate-passphrase: ${{ secrets.MACOS_CERTIFICATE_PWD }}
-          keychain-password: ${{ secrets.KEYCHAIN_PWD }}
+          keychain: ${{ github.run_id }}
+          keychain-password: ${{ github.run_id }}
+          p12-file-base64: ${{ secrets.MACOS_CERTIFICATE }}
+          p12-password: ${{ secrets.MACOS_CERTIFICATE_PWD }}
 
       - name: Codesign application
         run: |
