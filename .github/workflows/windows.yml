@@ -1,6 +1,11 @@
 name: Windows
 
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'extras/images/**'
 
 jobs:
   build:
@@ -28,22 +33,22 @@ jobs:
           architecture: ${{ matrix.python-architecture }}
 
       - name: Upgrade PIP
-        run: python -m pip install --upgrade pip setuptools wheel
+        run: python3 -m pip install --upgrade pip setuptools wheel
 
       - name: Display Python version
-        run: python --version
+        run: python3 --version
 
       - name: Display PIP version
-        run: pip --version
+        run: python3 -m pip --version
 
       - name: Install python dependencies
-        run: pip install -r requirements.txt
+        run: python3 -m pip install -r requirements.txt
 
       - name: Build
         run: pyinstaller "My App.spec"
 
       - name: Pack
-        run: python -m zipfile -c ${{ matrix.config.target }}-${{ matrix.python-architecture }}.zip dist/
+        run: python3 -m zipfile -c ${{ matrix.config.target }}-${{ matrix.python-architecture }}.zip dist/
 
       - name: Upload
         uses: actions/upload-artifact@v2

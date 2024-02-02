@@ -1,6 +1,11 @@
 name: macOS
 
-on: [push]
+on:
+  push:
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - 'extras/images/**'
 
 jobs:
   build:
@@ -27,26 +32,27 @@ jobs:
           architecture: ${{ matrix.python-architecture }}
 
       - name: Upgrade PIP
-        run: python -m pip install --upgrade pip setuptools wheel
+        run: python3 -m pip install --upgrade pip setuptools wheel
 
       - name: Display Python version
-        run: python --version
+        run: python3 --version
 
       - name: Display PIP version
-        run: pip --version
+        run: python3 -m pip --version
 
       - name: Install python dependencies
-        run: pip install -r requirements.txt
+        run: python3 -m pip install -r requirements.txt
 
       - name: Build
         run: pyinstaller "My App.spec"
 
-      - name: "Import certificate"
-        uses: devbotsxyz/import-signing-certificate@main
+      - name: Install application certificate
+        uses: apple-actions/import-codesign-certs@v2
         with:
-          certificate-data: ${{ secrets.MACOS_CERTIFICATE }}
-          certificate-passphrase: ${{ secrets.MACOS_CERTIFICATE_PWD }}
-          keychain-password: ${{ secrets.KEYCHAIN_PWD }}
+          keychain: ${{ github.run_id }}
+          keychain-password: ${{ github.run_id }}
+          p12-file-base64: ${{ secrets.MACOS_CERTIFICATE }}
+          p12-password: ${{ secrets.MACOS_CERTIFICATE_PWD }}
 
       - name: Codesign application
         run: |
@@ -67,7 +73,7 @@ jobs:
         env:
           NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
           NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
-        run: python notarize.py --dmg ${{ matrix.config.target }}-${{ matrix.python-architecture }}.dmg --bundle-id "com.paulocoutinho.example" --user $NOTARIZATION_USERNAME --passwd $NOTARIZATION_PASSWORD --asc-provider 54BDV6YZ73
+        run: python3 notarize.py --dmg ${{ matrix.config.target }}-${{ matrix.python-architecture }}.dmg --bundle-id "com.paulocoutinho.example" --user $NOTARIZATION_USERNAME --passwd $NOTARIZATION_PASSWORD --asc-provider 54BDV6YZ73
 
       - name: Staple build
         run: xcrun stapler staple ${{ matrix.config.target }}-${{ matrix.python-architecture }}.dmg
