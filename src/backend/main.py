@@ -1,11 +1,8 @@
 import logging
 import os
-from contextlib import redirect_stdout
-from io import StringIO
-
-import webview
 
 import api
+import webview
 
 logger = logging.getLogger(__name__)
 
