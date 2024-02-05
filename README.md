@@ -1,8 +1,8 @@
 # PyInstaller Cross-Platform Sample
 
-[![Linux](https://github.com/paulo-coutinho/pyinstaller-sample/actions/workflows/linux.yml/badge.svg)](https://github.com/paulo-coutinho/pyinstaller-sample/actions/workflows/linux.yml)
-[![Windows](https://github.com/paulo-coutinho/pyinstaller-sample/actions/workflows/windows.yml/badge.svg)](https://github.com/paulo-coutinho/pyinstaller-sample/actions/workflows/windows.yml)
-[![macOS](https://github.com/paulo-coutinho/pyinstaller-sample/actions/workflows/macos.yml/badge.svg)](https://github.com/paulo-coutinho/pyinstaller-sample/actions/workflows/macos.yml)
+[![Linux](https://github.com/paulocoutinhox/pyinstaller-sample/actions/workflows/linux.yml/badge.svg)](https://github.com/paulocoutinhox/pyinstaller-sample/actions/workflows/linux.yml)
+[![Windows](https://github.com/paulocoutinhox/pyinstaller-sample/actions/workflows/windows.yml/badge.svg)](https://github.com/paulocoutinhox/pyinstaller-sample/actions/workflows/windows.yml)
+[![macOS](https://github.com/paulocoutinhox/pyinstaller-sample/actions/workflows/macos.yml/badge.svg)](https://github.com/paulocoutinhox/pyinstaller-sample/actions/workflows/macos.yml)
 
 In this sample you can learn about generate desktop application with: Python + Flask + Vue 3.
 
