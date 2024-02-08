@@ -44,6 +44,11 @@ jobs:
       - name: Install python dependencies
         run: python3 -m pip install -r requirements.txt
 
+      - name: Set up .NET Core for pythonnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.x'
+
       - name: Build
         run: pyinstaller "My App.spec"
 

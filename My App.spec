@@ -47,6 +47,8 @@ a = Analysis(
         "modules.datetime",
         "modules.net",
         "modules.system",
+        "clr_loader",
+        "pythonnet",
     ],
     hookspath=[],
     runtime_hooks=[],
